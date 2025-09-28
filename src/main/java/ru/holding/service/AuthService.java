@@ -1,4 +1,4 @@
-package ru.dekan.service;
+package ru.holding.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,26 +14,21 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.session.FindByIndexNameSessionRepository;
-import org.springframework.session.Session;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.dekan.dto.AuthDTO;
-import ru.dekan.dto.ChangeRoleDto;
-import ru.dekan.dto.UserWithRolesDto;
-import ru.dekan.entity.Role;
-import ru.dekan.entity.User;
-import ru.dekan.enums.Roles;
-import ru.dekan.repository.RoleRepo;
-import ru.dekan.repository.UserRepo;
+import ru.holding.dto.AuthDTO;
+import ru.holding.dto.UserWithRolesDto;
+import ru.holding.entity.Role;
+import ru.holding.entity.User;
+import ru.holding.enums.Roles;
+import ru.holding.repository.RoleRepo;
+import ru.holding.repository.UserRepo;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -97,8 +92,6 @@ public class AuthService {
 
         if (adminEmail.equals(email)) {
             user.addRole(new Role(Roles.ADMIN));
-        } else {
-            user.addRole(new Role(Roles.GUEST));
         }
 
         userRepo.save(user);

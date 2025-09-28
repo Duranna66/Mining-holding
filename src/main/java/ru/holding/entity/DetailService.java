@@ -1,10 +1,10 @@
-package ru.dekan.entity;
+package ru.holding.entity;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.dekan.repository.UserRepo;
+import ru.holding.repository.UserRepo;
 
 @Service(value = "detailService")
 public class DetailService implements UserDetailsService {

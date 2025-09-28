@@ -1,4 +1,4 @@
-package ru.dekan.dto;
+package ru.holding.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

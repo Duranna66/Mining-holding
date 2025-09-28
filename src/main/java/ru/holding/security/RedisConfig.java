@@ -1,4 +1,4 @@
-package ru.dekan.security;
+package ru.holding.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;

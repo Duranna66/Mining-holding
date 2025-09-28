@@ -1,10 +1,10 @@
-package ru.dekan.entity;
+package ru.holding.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.dekan.enums.Roles;
+import ru.holding.enums.Roles;
 
 import java.io.Serializable;
 

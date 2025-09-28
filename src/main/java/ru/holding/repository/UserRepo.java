@@ -1,10 +1,10 @@
-package ru.dekan.repository;
+package ru.holding.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.dekan.entity.User;
+import ru.holding.entity.User;
 
 import java.util.Optional;
 

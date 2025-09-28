@@ -1,14 +1,14 @@
-package ru.dekan;
+package ru.holding;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-public class DekanApplication {
+public class MiningHoldingApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DekanApplication.class, args);
+        SpringApplication.run(MiningHoldingApplication.class, args);
     }
 
 }

@@ -1,34 +1,39 @@
-package ru.dekan.controller;
+package ru.holding.controller;
 
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ru.dekan.dto.AuthDTO;
-import ru.dekan.dto.ChangeRoleDto;
-import ru.dekan.dto.UserWithRolesDto;
-import ru.dekan.enums.Roles;
-import ru.dekan.service.AuthService;
+import ru.holding.dto.AuthDTO;
+import ru.holding.dto.UserWithRolesDto;
+import ru.holding.entity.Student;
+import ru.holding.entity.User;
+import ru.holding.enums.Roles;
+import ru.holding.repository.StudentRepository;
+import ru.holding.repository.UserRepo;
+import ru.holding.service.AuthService;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(path = "/api/v1/auth")
+@CrossOrigin("*")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+    private final UserRepo userRepo;
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(@Valid @RequestBody AuthDTO authDTO,
@@ -60,6 +65,25 @@ public class AuthController {
     ) {
         return new ResponseEntity<>(authService.login(authDTO, request, response), OK);
     }
+
+
+    @GetMapping("/check")
+    public long checkSession(Authentication authentication) {
+
+
+        // Предположим, ты используешь email в качестве principal
+        String email = authentication.getName();
+
+        // Получаем ID студента по email (или пользователя)
+        User user = userRepo.findByPrincipal(email)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("userId", user.getId());
+
+        return user.getId();
+    }
+
 
 
 

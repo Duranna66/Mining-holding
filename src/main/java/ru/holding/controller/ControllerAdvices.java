@@ -1,4 +1,4 @@
-package ru.dekan.controller;
+package ru.holding.controller;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;

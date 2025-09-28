@@ -1,4 +1,4 @@
-package ru.dekan.security;
+package ru.holding.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

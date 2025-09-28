@@ -1,4 +1,4 @@
-package ru.dekan.repository;
+package ru.holding.repository;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.dekan.entity.Role;
-import ru.dekan.enums.Roles;
+import ru.holding.entity.Role;
+import ru.holding.enums.Roles;
 
 @Repository
 public interface RoleRepo extends JpaRepository<Role, Long> {

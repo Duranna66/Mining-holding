@@ -1,4 +1,4 @@
-package ru.dekan.entity;
+package ru.holding.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package ru.dekan.entity;
+package ru.holding.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
