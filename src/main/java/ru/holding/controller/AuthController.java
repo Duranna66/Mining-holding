@@ -11,10 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.holding.dto.AuthDTO;
 import ru.holding.dto.UserWithRolesDto;
-import ru.holding.entity.Student;
 import ru.holding.entity.User;
 import ru.holding.enums.Roles;
-import ru.holding.repository.StudentRepository;
 import ru.holding.repository.UserRepo;
 import ru.holding.service.AuthService;
 
@@ -23,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
