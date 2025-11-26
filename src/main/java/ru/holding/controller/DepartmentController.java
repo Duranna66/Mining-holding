@@ -15,8 +15,9 @@ import ru.holding.service.DepartmentService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/departments")
+@RequestMapping("/api/v1/departments")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @Tag(name = "Departments", description = "Department management API")
 public class DepartmentController {
 

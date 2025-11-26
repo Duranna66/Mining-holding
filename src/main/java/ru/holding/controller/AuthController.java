@@ -70,10 +70,8 @@ public class AuthController {
     public long checkSession(Authentication authentication) {
 
 
-        // Предположим, ты используешь email в качестве principal
         String email = authentication.getName();
 
-        // Получаем ID студента по email (или пользователя)
         User user = userRepo.findByPrincipal(email)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
 

@@ -16,8 +16,9 @@ import ru.holding.service.EquipmentService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/equipment")
+@RequestMapping("/api/v1/equipment")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @Tag(name = "Equipment", description = "Equipment management API")
 public class EquipmentController {
 

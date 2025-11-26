@@ -1,0 +1,1109 @@
+
+### Variables
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+###############################################################################
+### AUTHENTICATION (Авторизация)
+###
+###############################################################################
+
+### 1. Регистрация нового пользователя
+POST {{baseUrl}}/api/v1/auth/signup
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@admin.com",
+  "password": "admin"
+}
+
+### 2. Вход в систему (Login)
+# @name login
+POST {{baseUrl}}/api/v1/auth/signin
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@admin.com",
+  "password": "admin"
+}
+
+> {%
+    client.global.set("auth_cookie", response.headers.valuesOf("Set-Cookie")[0]);
+%}
+
+### 3. Проверить текущую сессию (получить ID пользователя)
+GET {{baseUrl}}/api/v1/auth/check
+Cookie: {{auth_cookie}}
+
+### 4. Получить информацию о текущем пользователе (роли)
+GET {{baseUrl}}/api/v1/auth/whoami
+Cookie: {{auth_cookie}}
+
+### 5. Получить список всех пользователей (только для ADMIN)
+GET {{baseUrl}}/api/v1/auth/users
+Cookie: {{auth_cookie}}
+
+### 6. Получить все доступные роли (только для ADMIN)
+GET {{baseUrl}}/api/v1/auth/roles
+Cookie: {{auth_cookie}}
+
+### 7. Выход из системы (Logout)
+POST {{baseUrl}}/api/v1/auth/logout
+Cookie: {{auth_cookie}}
+
+###############################################################################
+### ENTERPRISES (Предприятия)
+###
+###############################################################################
+
+### 8. Создать предприятие
+POST {{baseUrl}}/api/v1/enterprises
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Тестовое предприятие2",
+  "type": "MINING",
+  "location": "Якутск"
+}
+
+### 9. Получить все предприятия
+GET {{baseUrl}}/api/v1/enterprises
+Cookie: {{auth_cookie}}
+
+### 10. Получить предприятие по ID
+GET {{baseUrl}}/api/enterprises/1
+Cookie: {{auth_cookie}}
+
+### 11. Обновить предприятие
+PUT {{baseUrl}}/api/enterprises/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Обновленное название",
+  "location": "Новая локация"
+}
+
+### 12. Удалить предприятие
+DELETE {{baseUrl}}/api/enterprises/100
+Cookie: {{auth_cookie}}
+
+###############################################################################
+### DEPARTMENTS (Подразделения)
+###
+###############################################################################
+
+### 13. Создать подразделение
+POST {{baseUrl}}/api/departments
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "enterpriseId": 1,
+  "name": "Тестовое подразделение",
+  "type": "MINE"
+}
+
+### 14. Получить все подразделения
+GET {{baseUrl}}/api/departments
+Cookie: {{auth_cookie}}
+
+### 15. Получить подразделения по ID предприятия
+GET {{baseUrl}}/api/departments?enterpriseId=1
+Cookie: {{auth_cookie}}
+
+### 16. Получить подразделение по ID
+GET {{baseUrl}}/api/departments/1
+Cookie: {{auth_cookie}}
+
+### 17. Обновить подразделение
+PUT {{baseUrl}}/api/departments/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Обновленное подразделение",
+  "type": "WORKSHOP"
+}
+
+### 18. Удалить подразделение
+DELETE {{baseUrl}}/api/departments/100
+Cookie: {{auth_cookie}}
+
+###############################################################################
+### MATERIALS (Материалы)
+###
+###############################################################################
+
+### 19. Создать материал
+POST {{baseUrl}}/api/materials
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Тестовый материал",
+  "category": "RAW_MATERIAL",
+  "unit": "кг",
+  "description": "Описание тестового материала"
+}
+
+### 20. Получить все материалы
+GET {{baseUrl}}/api/materials
+Cookie: {{auth_cookie}}
+
+### 21. Получить материал по ID
+GET {{baseUrl}}/api/materials/1
+Cookie: {{auth_cookie}}
+
+### 22. Обновить материал
+PUT {{baseUrl}}/api/materials/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Обновленный материал",
+  "unit": "тонна"
+}
+
+### 23. Удалить материал
+DELETE {{baseUrl}}/api/materials/100
+Cookie: {{auth_cookie}}
+
+###############################################################################
+### EQUIPMENT (Оборудование)
+###
+###############################################################################
+
+### 24. Создать оборудование
+POST {{baseUrl}}/api/equipment
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "departmentId": 1,
+  "name": "Тестовый экскаватор",
+  "type": "EXCAVATOR",
+  "inventoryNumber": "TEST-001-2025",
+  "status": "OPERATIONAL"
+}
+
+### 25. Получить все оборудование
+GET {{baseUrl}}/api/equipment
+Cookie: {{auth_cookie}}
+
+### 26. Получить оборудование по ID подразделения
+GET {{baseUrl}}/api/equipment?departmentId=1
+Cookie: {{auth_cookie}}
+
+### 27. Получить оборудование по статусу
+GET {{baseUrl}}/api/equipment?status=OPERATIONAL
+Cookie: {{auth_cookie}}
+
+### 28. Получить оборудование по статусу UNDER_REPAIR
+GET {{baseUrl}}/api/equipment?status=UNDER_REPAIR
+Cookie: {{auth_cookie}}
+
+### 29. Получить оборудование по ID
+GET {{baseUrl}}/api/equipment/1
+Cookie: {{auth_cookie}}
+
+### 30. Обновить оборудование
+PUT {{baseUrl}}/api/equipment/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Обновленное оборудование",
+  "status": "UNDER_REPAIR"
+}
+
+### 31. Удалить оборудование
+DELETE {{baseUrl}}/api/equipment/100
+Cookie: {{auth_cookie}}
+
+###############################################################################
+### ПРИМЕРЫ ВАЛИДАЦИОННЫХ ОШИБОК
+###############################################################################
+
+### 32. Создать предприятие без обязательных полей (ошибка валидации)
+POST {{baseUrl}}/api/enterprises
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": ""
+}
+
+### 33. Создать подразделение с несуществующим enterpriseId (бизнес-ошибка)
+POST {{baseUrl}}/api/departments
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "enterpriseId": 99999,
+  "name": "Тестовое подразделение",
+  "type": "MINE"
+}
+
+### 34. Получить несуществующее предприятие (404)
+GET {{baseUrl}}/api/enterprises/99999
+Cookie: {{auth_cookie}}
+
+### 35. Создать оборудование с дубликатом инвентарного номера (ошибка)
+POST {{baseUrl}}/api/equipment
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "departmentId": 1,
+  "name": "Дубликат оборудования",
+  "type": "EXCAVATOR",
+  "inventoryNumber": "EXC-001-2023",
+  "status": "OPERATIONAL"
+}
+
+###############################################################################
+### ПОЛНЫЙ СЦЕНАРИЙ: Создание предприятия с подразделениями и оборудованием
+###############################################################################
+
+### 36. Шаг 1: Создать новое предприятие
+POST {{baseUrl}}/api/enterprises
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Новый горнодобывающий комплекс",
+  "type": "MINING",
+  "location": "Красноярский край"
+}
+
+### 37.
+POST {{baseUrl}}/api/departments
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "enterpriseId": 7,
+  "name": "Карьер №2",
+  "type": "MINE"
+}
+
+### 38. Шаг 3: ( ID подразделения)
+POST {{baseUrl}}/api/equipment
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "departmentId": 24,
+  "name": "Экскаватор Komatsu PC5500",
+  "type": "EXCAVATOR",
+  "inventoryNumber": "NEW-EXC-001-2025",
+  "status": "OPERATIONAL"
+}
+
+### 39. Шаг 4: Получить все подразделения нового предприятия
+GET {{baseUrl}}/api/departments?enterpriseId=7
+Cookie: {{auth_cookie}}
+
+### 40. Шаг 5: Получить все оборудование подразделения
+GET {{baseUrl}}/api/equipment?departmentId=24
+Cookie: {{auth_cookie}}
+
+###############################################################################
+### ТЕСТИРОВАНИЕ ENUM VALUES
+###############################################################################
+
+### 41. Типы предприятий: MINING, PROCESSING, OFFICE
+POST {{baseUrl}}/api/enterprises
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Перерабатывающий завод",
+  "type": "PROCESSING",
+  "location": "Екатеринбург"
+}
+
+### 42. Типы подразделений: MINE, WORKSHOP, REPAIR_SERVICE, WAREHOUSE, FINANCE, HR, ADMINISTRATION
+POST {{baseUrl}}/api/departments
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "enterpriseId": 1,
+  "name": "Финансовый департамент",
+  "type": "FINANCE"
+}
+
+### 43. Категории материалов: RAW_MATERIAL, SPARE_PART, REAGENT, FUEL, OTHER
+POST {{baseUrl}}/api/materials
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Дизельное топливо ДТ",
+  "category": "FUEL",
+  "unit": "литр",
+  "description": "Топливо для горной техники"
+}
+
+### 44. Типы оборудования: EXCAVATOR, TRUCK, FURNACE, REACTOR, CONVEYOR, OTHER
+### Статусы оборудования: OPERATIONAL, UNDER_REPAIR, IDLE, DECOMMISSIONED
+POST {{baseUrl}}/api/equipment
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "departmentId": 1,
+  "name": "Конвейер ленточный",
+  "type": "CONVEYOR",
+  "inventoryNumber": "CNV-TEST-001",
+  "status": "IDLE"
+}
+
+###############################################################################
+### WAREHOUSES (Склады)
+###
+###############################################################################
+
+### 45. Создать склад
+POST {{baseUrl}}/api/warehouses
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "enterpriseId": 1,
+  "name": "Главный склад",
+  "type": "RAW_MATERIALS",
+  "capacity": 10000.00,
+  "address": "ул. Складская, 1"
+}
+
+### 46. Получить все склады
+GET {{baseUrl}}/api/warehouses
+Cookie: {{auth_cookie}}
+
+### 47. Получить склады по ID предприятия
+GET {{baseUrl}}/api/warehouses?enterpriseId=1
+Cookie: {{auth_cookie}}
+
+### 48. Получить склад по ID
+GET {{baseUrl}}/api/warehouses/1
+Cookie: {{auth_cookie}}
+
+### 49. Обновить склад
+PUT {{baseUrl}}/api/warehouses/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Обновленный склад",
+  "capacity": 15000.00,
+  "address": "ул. Складская, 1А"
+}
+
+### 50. Удалить склад
+DELETE {{baseUrl}}/api/warehouses/1
+Cookie: {{auth_cookie}}
+
+### 51. Типы складов: RAW_MATERIALS, FINISHED_GOODS, EQUIPMENT, COLD_STORAGE
+POST {{baseUrl}}/api/warehouses
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "enterpriseId": 1,
+  "name": "Холодильный склад",
+  "type": "COLD_STORAGE",
+  "capacity": 5000.00,
+  "address": "ул. Холодильная, 10"
+}
+
+###############################################################################
+### MATERIAL INVENTORY (Остатки материалов на складах)
+###
+###############################################################################
+
+### 52. Создать запись остатков материала на складе
+POST {{baseUrl}}/api/inventory
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "warehouseId": 1,
+  "materialId": 1,
+  "quantity": 500.000,
+  "unit": "кг"
+}
+
+### 53. Получить все остатки
+GET {{baseUrl}}/api/inventory
+Cookie: {{auth_cookie}}
+
+### 54. Получить остатки по складу
+GET {{baseUrl}}/api/inventory?warehouseId=1
+Cookie: {{auth_cookie}}
+
+### 55. Получить остатки по материалу
+GET {{baseUrl}}/api/inventory?materialId=1
+Cookie: {{auth_cookie}}
+
+### 56. Получить остаток по ID
+GET {{baseUrl}}/api/inventory/1
+Cookie: {{auth_cookie}}
+
+### 57. Обновить количество материала
+PUT {{baseUrl}}/api/inventory/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "quantity": 750.000,
+  "unit": "кг"
+}
+
+### 58. Удалить запись остатков
+DELETE {{baseUrl}}/api/inventory/1
+Cookie: {{auth_cookie}}
+
+###############################################################################
+### SUPPLIERS (Поставщики)
+###
+###############################################################################
+
+### 59. Создать поставщика
+POST {{baseUrl}}/api/suppliers
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "ООО Поставщик",
+  "legalName": "Общество с ограниченной ответственностью Поставщик",
+  "inn": "7728123456",
+  "kpp": "772801001",
+  "address": "г. Москва, ул. Поставщиков, д. 1",
+  "contactPerson": "Иванов Иван Иванович",
+  "phone": "+7 (495) 123-45-67",
+  "email": "supplier@example.com",
+  "supplierType": "SEEDS",
+  "rating": 5
+}
+
+### 60. Получить всех поставщиков
+GET {{baseUrl}}/api/suppliers
+Cookie: {{auth_cookie}}
+
+### 61. Получить только активных поставщиков
+GET {{baseUrl}}/api/suppliers?active=true
+Cookie: {{auth_cookie}}
+
+### 62. Получить поставщиков по типу
+GET {{baseUrl}}/api/suppliers?type=SEEDS
+Cookie: {{auth_cookie}}
+
+### 63. Получить поставщика по ID
+GET {{baseUrl}}/api/suppliers/1
+Cookie: {{auth_cookie}}
+
+### 64. Обновить поставщика
+PUT {{baseUrl}}/api/suppliers/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "ООО Новый поставщик",
+  "phone": "+7 (495) 999-88-77",
+  "rating": 4
+}
+
+### 65. Деактивировать поставщика (soft delete)
+DELETE {{baseUrl}}/api/suppliers/1
+Cookie: {{auth_cookie}}
+
+### 66. Типы поставщиков: SEEDS, FERTILIZERS, EQUIPMENT, FUEL, SERVICES, OTHER
+POST {{baseUrl}}/api/suppliers
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "ООО Топливная компания",
+  "legalName": "Общество с ограниченной ответственностью Топливная компания",
+  "inn": "7728999888",
+  "kpp": "772801002",
+  "address": "г. Москва, ул. Топливная, д. 5",
+  "contactPerson": "Петров Петр Петрович",
+  "phone": "+7 (495) 777-66-55",
+  "email": "fuel@example.com",
+  "supplierType": "FUEL",
+  "rating": 4
+}
+
+###############################################################################
+### CUSTOMERS (Клиенты)
+###
+###############################################################################
+
+### 67. Создать клиента
+POST {{baseUrl}}/api/customers
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "ООО Покупатель",
+  "legalName": "Общество с ограниченной ответственностью Покупатель",
+  "inn": "7728654321",
+  "kpp": "772801003",
+  "address": "г. Москва, ул. Покупателей, д. 10",
+  "contactPerson": "Сидоров Сидор Сидорович",
+  "phone": "+7 (495) 555-44-33",
+  "email": "customer@example.com",
+  "customerType": "WHOLESALE"
+}
+
+### 68. Получить всех клиентов
+GET {{baseUrl}}/api/customers
+Cookie: {{auth_cookie}}
+
+### 69. Получить только активных клиентов
+GET {{baseUrl}}/api/customers?active=true
+Cookie: {{auth_cookie}}
+
+### 70. Получить клиентов по типу
+GET {{baseUrl}}/api/customers?type=WHOLESALE
+Cookie: {{auth_cookie}}
+
+### 71. Получить клиента по ID
+GET {{baseUrl}}/api/customers/1
+Cookie: {{auth_cookie}}
+
+### 72. Обновить клиента
+PUT {{baseUrl}}/api/customers/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "ООО Новый покупатель",
+  "phone": "+7 (495) 111-22-33",
+  "customerType": "RETAIL"
+}
+
+### 73. Деактивировать клиента (soft delete)
+DELETE {{baseUrl}}/api/customers/1
+Cookie: {{auth_cookie}}
+
+### 74. Типы клиентов: WHOLESALE, RETAIL, EXPORT, GOVERNMENT, OTHER
+POST {{baseUrl}}/api/customers
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Государственная организация",
+  "legalName": "Государственное учреждение",
+  "inn": "7728111222",
+  "kpp": "772801004",
+  "address": "г. Москва, пр. Государственный, д. 1",
+  "contactPerson": "Федоров Федор Федорович",
+  "phone": "+7 (495) 444-33-22",
+  "email": "gov@example.com",
+  "customerType": "GOVERNMENT"
+}
+
+###############################################################################
+### PRODUCTS (Продукция)
+###
+###############################################################################
+
+### 75. Создать продукт
+POST {{baseUrl}}/api/products
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Пшеница озимая",
+  "productCode": "WHEAT-001",
+  "category": "GRAIN",
+  "unit": "тонна",
+  "description": "Пшеница озимая высшего сорта",
+  "standardCost": 15000.00
+}
+
+### 76. Получить все продукты
+GET {{baseUrl}}/api/products
+Cookie: {{auth_cookie}}
+
+### 77. Получить только активные продукты
+GET {{baseUrl}}/api/products?active=true
+Cookie: {{auth_cookie}}
+
+### 78. Получить продукты по категории
+GET {{baseUrl}}/api/products?category=GRAIN
+Cookie: {{auth_cookie}}
+
+### 79. Получить продукт по ID
+GET {{baseUrl}}/api/products/1
+Cookie: {{auth_cookie}}
+
+### 80. Обновить продукт
+PUT {{baseUrl}}/api/products/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Пшеница озимая обновленная",
+  "standardCost": 16000.00,
+  "description": "Пшеница озимая высшего сорта (обновленная)"
+}
+
+### 81. Деактивировать продукт (soft delete)
+DELETE {{baseUrl}}/api/products/1
+Cookie: {{auth_cookie}}
+
+### 82. Категории продуктов: GRAIN, VEGETABLES, MEAT, DAIRY, PROCESSED, OTHER
+POST {{baseUrl}}/api/products
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "Молоко пастеризованное",
+  "productCode": "MILK-001",
+  "category": "DAIRY",
+  "unit": "литр",
+  "description": "Молоко пастеризованное 3.2%",
+  "standardCost": 50.00
+}
+
+###############################################################################
+### DOCUMENTS (Документы)
+###
+###############################################################################
+
+### 83. Создать документ
+POST {{baseUrl}}/api/documents
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "documentType": "INVOICE",
+  "documentNumber": "INV-2025-001",
+  "documentDate": "2025-01-15",
+  "enterpriseId": 1,
+  "supplierId": 1,
+  "status": "DRAFT",
+  "totalAmount": 100000.00,
+  "currency": "RUB",
+  "notes": "Счет на оплату материалов",
+  "createdByUserId": 1
+}
+
+### 84. Получить все документы
+GET {{baseUrl}}/api/documents
+Cookie: {{auth_cookie}}
+
+### 85. Получить документы по предприятию
+GET {{baseUrl}}/api/documents?enterpriseId=1
+Cookie: {{auth_cookie}}
+
+### 86. Получить документы по поставщику
+GET {{baseUrl}}/api/documents?supplierId=1
+Cookie: {{auth_cookie}}
+
+### 87. Получить документы по статусу
+GET {{baseUrl}}/api/documents?status=DRAFT
+Cookie: {{auth_cookie}}
+
+### 88. Получить документ по ID
+GET {{baseUrl}}/api/documents/1
+Cookie: {{auth_cookie}}
+
+### 89. Обновить документ
+PUT {{baseUrl}}/api/documents/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "status": "APPROVED",
+  "totalAmount": 120000.00,
+  "notes": "Счет на оплату материалов (обновлен)"
+}
+
+### 90. Обновить статус документа
+PATCH {{baseUrl}}/api/documents/1/status?status=APPROVED
+Cookie: {{auth_cookie}}
+
+### 91. Удалить документ
+DELETE {{baseUrl}}/api/documents/1
+Cookie: {{auth_cookie}}
+
+### 92. Типы документов: INVOICE, WAYBILL, PAYMENT_ORDER, CONTRACT, ACT, OTHER
+### Статусы документов: DRAFT, APPROVED, CANCELLED, COMPLETED
+POST {{baseUrl}}/api/documents
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "documentType": "CONTRACT",
+  "documentNumber": "CNTR-2025-001",
+  "documentDate": "2025-01-15",
+  "enterpriseId": 1,
+  "supplierId": 1,
+  "status": "DRAFT",
+  "totalAmount": 500000.00,
+  "currency": "RUB",
+  "notes": "Договор на поставку материалов",
+  "createdByUserId": 1
+}
+
+###############################################################################
+### DOCUMENT ITEMS (Позиции документов)
+###
+###############################################################################
+
+### 93. Создать позицию документа
+POST {{baseUrl}}/api/document-items
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "documentId": 1,
+  "itemType": "MATERIAL",
+  "itemId": 1,
+  "quantity": 100.000,
+  "unit": "кг",
+  "price": 500.00,
+  "amount": 50000.00
+}
+
+### 94. Получить все позиции документов
+GET {{baseUrl}}/api/document-items
+Cookie: {{auth_cookie}}
+
+### 95. Получить позиции по документу
+GET {{baseUrl}}/api/document-items?documentId=1
+Cookie: {{auth_cookie}}
+
+### 96. Получить позицию по ID
+GET {{baseUrl}}/api/document-items/1
+Cookie: {{auth_cookie}}
+
+### 97. Обновить позицию документа
+PUT {{baseUrl}}/api/document-items/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "quantity": 150.000,
+  "price": 450.00,
+  "amount": 67500.00
+}
+
+### 98. Удалить позицию документа
+DELETE {{baseUrl}}/api/document-items/1
+Cookie: {{auth_cookie}}
+
+### 99. Типы элементов: MATERIAL, PRODUCT, SERVICE
+POST {{baseUrl}}/api/document-items
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "documentId": 1,
+  "itemType": "PRODUCT",
+  "itemId": 1,
+  "quantity": 50.000,
+  "unit": "тонна",
+  "price": 15000.00,
+  "amount": 750000.00
+}
+
+###############################################################################
+### BANK ACCOUNTS (Банковские счета)
+###
+###############################################################################
+
+### 100. Создать банковский счет
+POST {{baseUrl}}/api/bank-accounts
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "enterpriseId": 1,
+  "accountNumber": "40702810100000000001",
+  "bankName": "ПАО Сбербанк",
+  "bik": "044525225",
+  "correspondentAccount": "30101810400000000225",
+  "currency": "RUB"
+}
+
+### 101. Получить все банковские счета
+GET {{baseUrl}}/api/bank-accounts
+Cookie: {{auth_cookie}}
+
+### 102. Получить счета по предприятию
+GET {{baseUrl}}/api/bank-accounts?enterpriseId=1
+Cookie: {{auth_cookie}}
+
+### 103. Получить только активные счета
+GET {{baseUrl}}/api/bank-accounts?active=true
+Cookie: {{auth_cookie}}
+
+### 104. Получить банковский счет по ID
+GET {{baseUrl}}/api/bank-accounts/1
+Cookie: {{auth_cookie}}
+
+### 105. Обновить банковский счет
+PUT {{baseUrl}}/api/bank-accounts/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "bankName": "ПАО Сбербанк (обновлено)",
+  "bik": "044525225"
+}
+
+### 106. Деактивировать банковский счет (soft delete)
+DELETE {{baseUrl}}/api/bank-accounts/1
+Cookie: {{auth_cookie}}
+
+###############################################################################
+### PAYMENTS (Платежи)
+###
+###############################################################################
+
+### 107. Создать платеж
+POST {{baseUrl}}/api/payments
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "paymentNumber": "PAY-2025-001",
+  "paymentDate": "2025-01-15",
+  "bankAccountId": 1,
+  "paymentType": "OUTGOING",
+  "counterpartyType": "SUPPLIER",
+  "counterpartyId": 1,
+  "amount": 100000.00,
+  "currency": "RUB",
+  "purpose": "Оплата за материалы по счету INV-2025-001",
+  "documentId": 1,
+  "status": "PENDING",
+  "createdByUserId": 1
+}
+
+### 108. Получить все платежи
+GET {{baseUrl}}/api/payments
+Cookie: {{auth_cookie}}
+
+### 109. Получить платежи по банковскому счету
+GET {{baseUrl}}/api/payments?bankAccountId=1
+Cookie: {{auth_cookie}}
+
+### 110. Получить платежи по статусу
+GET {{baseUrl}}/api/payments?status=PENDING
+Cookie: {{auth_cookie}}
+
+### 111. Получить платежи по типу
+GET {{baseUrl}}/api/payments?type=OUTGOING
+Cookie: {{auth_cookie}}
+
+### 112. Получить платеж по ID
+GET {{baseUrl}}/api/payments/1
+Cookie: {{auth_cookie}}
+
+### 113. Обновить платеж
+PUT {{baseUrl}}/api/payments/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "amount": 120000.00,
+  "purpose": "Оплата за материалы по счету INV-2025-001 (обновлено)",
+  "status": "PROCESSED"
+}
+
+### 114. Обновить статус платежа (устанавливает processedAt при PROCESSED)
+PATCH {{baseUrl}}/api/payments/1/status?status=PROCESSED
+Cookie: {{auth_cookie}}
+
+### 115. Удалить платеж
+DELETE {{baseUrl}}/api/payments/1
+Cookie: {{auth_cookie}}
+
+### 116. Типы платежей: INCOMING, OUTGOING
+### Типы контрагентов: SUPPLIER, CUSTOMER, EMPLOYEE, TAX, OTHER
+### Статусы платежей: PENDING, PROCESSED, CANCELLED, FAILED
+POST {{baseUrl}}/api/payments
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "paymentNumber": "PAY-2025-002",
+  "paymentDate": "2025-01-16",
+  "bankAccountId": 1,
+  "paymentType": "INCOMING",
+  "counterpartyType": "CUSTOMER",
+  "counterpartyId": 1,
+  "amount": 500000.00,
+  "currency": "RUB",
+  "purpose": "Оплата от клиента за продукцию",
+  "status": "PENDING",
+  "createdByUserId": 1
+}
+
+###############################################################################
+### LAND PLOTS (Земельные участки)
+###
+###############################################################################
+
+### 117. Создать земельный участок
+POST {{baseUrl}}/api/land-plots
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "enterpriseId": 1,
+  "plotNumber": "001",
+  "cadastralNumber": "77:01:0001001:1234",
+  "areaHectares": 100.5000,
+  "soilType": "Чернозем",
+  "location": "Краснодарский край, участок №1",
+  "usageType": "ARABLE"
+}
+
+### 118. Получить все земельные участки
+GET {{baseUrl}}/api/land-plots
+Cookie: {{auth_cookie}}
+
+### 119. Получить участки по предприятию
+GET {{baseUrl}}/api/land-plots?enterpriseId=1
+Cookie: {{auth_cookie}}
+
+### 120. Получить участки по типу использования
+GET {{baseUrl}}/api/land-plots?usageType=ARABLE
+Cookie: {{auth_cookie}}
+
+### 121. Получить только активные участки
+GET {{baseUrl}}/api/land-plots?active=true
+Cookie: {{auth_cookie}}
+
+### 122. Получить земельный участок по ID
+GET {{baseUrl}}/api/land-plots/1
+Cookie: {{auth_cookie}}
+
+### 123. Обновить земельный участок
+PUT {{baseUrl}}/api/land-plots/1
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "areaHectares": 105.0000,
+  "soilType": "Чернозем обыкновенный",
+  "usageType": "ARABLE"
+}
+
+### 124. Деактивировать земельный участок (soft delete)
+DELETE {{baseUrl}}/api/land-plots/1
+Cookie: {{auth_cookie}}
+
+### 125. Типы использования земли: ARABLE, PASTURE, HAY_FIELD, ORCHARD, FALLOW, OTHER
+POST {{baseUrl}}/api/land-plots
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "enterpriseId": 1,
+  "plotNumber": "002",
+  "cadastralNumber": "77:01:0001001:5678",
+  "areaHectares": 50.2500,
+  "soilType": "Суглинок",
+  "location": "Краснодарский край, участок №2",
+  "usageType": "PASTURE"
+}
+
+###############################################################################
+### ПОЛНЫЕ СЦЕНАРИИ
+###############################################################################
+
+### 126. Сценарий: Создание поставки материалов
+# Шаг 1: Создать поставщика
+POST {{baseUrl}}/api/suppliers
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "name": "ООО Семена Юга",
+  "legalName": "Общество с ограниченной ответственностью Семена Юга",
+  "inn": "2309123456",
+  "kpp": "230901001",
+  "address": "г. Краснодар, ул. Садовая, д. 15",
+  "contactPerson": "Агроном Иван Петрович",
+  "phone": "+7 (861) 234-56-78",
+  "email": "seeds@south.ru",
+  "supplierType": "SEEDS",
+  "rating": 5
+}
+
+### 127. Шаг 2: Создать документ на поставку
+POST {{baseUrl}}/api/documents
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "documentType": "INVOICE",
+  "documentNumber": "INV-SEEDS-001",
+  "documentDate": "2025-01-20",
+  "enterpriseId": 1,
+  "supplierId": 1,
+  "status": "APPROVED",
+  "totalAmount": 250000.00,
+  "currency": "RUB",
+  "notes": "Поставка семян пшеницы",
+  "createdByUserId": 1
+}
+
+### 128. Шаг 3: Добавить позиции в документ
+POST {{baseUrl}}/api/document-items
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "documentId": 1,
+  "itemType": "MATERIAL",
+  "itemId": 1,
+  "quantity": 500.000,
+  "unit": "кг",
+  "price": 500.00,
+  "amount": 250000.00
+}
+
+### 129. Шаг 4: Создать платеж
+POST {{baseUrl}}/api/payments
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "paymentNumber": "PAY-SEEDS-001",
+  "paymentDate": "2025-01-20",
+  "bankAccountId": 1,
+  "paymentType": "OUTGOING",
+  "counterpartyType": "SUPPLIER",
+  "counterpartyId": 1,
+  "amount": 250000.00,
+  "currency": "RUB",
+  "purpose": "Оплата за семена по счету INV-SEEDS-001",
+  "documentId": 1,
+  "status": "PROCESSED",
+  "createdByUserId": 1
+}
+
+### 130. Шаг 5: Оприходовать на склад
+POST {{baseUrl}}/api/inventory
+Content-Type: {{contentType}}
+Cookie: {{auth_cookie}}
+
+{
+  "warehouseId": 1,
+  "materialId": 1,
+  "quantity": 500.000,
+  "unit": "кг"
+}

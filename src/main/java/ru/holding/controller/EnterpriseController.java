@@ -15,8 +15,9 @@ import ru.holding.service.EnterpriseService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/enterprises")
+@RequestMapping("/api/v1/enterprises")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @Tag(name = "Enterprises", description = "Enterprise management API")
 public class EnterpriseController {
 
@@ -24,7 +25,7 @@ public class EnterpriseController {
 
     @PostMapping
     @Operation(summary = "Create a new enterprise")
-    public ResponseEntity<EnterpriseDTO> create(@Valid @RequestBody CreateEnterpriseRequest request) {
+    public ResponseEntity<EnterpriseDTO> create(@RequestBody CreateEnterpriseRequest request) {
         EnterpriseDTO created = enterpriseService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }

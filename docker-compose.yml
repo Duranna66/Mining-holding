@@ -1,22 +1,109 @@
+version: '3.9'
+
+#############################################
+# ГЛАВНАЯ СЕКЦИЯ: SERVICES
+# Здесь объявляем все контейнеры системы
+#############################################
 services:
+
+  ###########################################
+  # BACKEND — Spring Boot приложение
+  ###########################################
+  app:
+    # Собираем backend из Dockerfile в корне проекта
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: java-app
+
+    # Бэкенд должен стартовать после БД и Redis
+    depends_on:
+      - db
+      - redis
+
+    # Переменные окружения для Spring Boot
+    # (URL базы, логин, пароль, redis)
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/holding_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PASSWORD: session
+
+    # Пробрасываем порт, чтобы открыть приложение снаружи
+    ports:
+      - "8080:8080"
+
+    # Можно раскомментировать для автоматического рестарта при падении
+    # restart: unless-stopped
+
+
+  ###########################################
+  # FRONTEND — React / Vite приложение
+  ###########################################
+  frontend:
+    # Сборка фронтенда через отдельный Dockerfile
+    build:
+      context: ./untitled1            # путь к frontend-проекту
+      dockerfile: Dockerfile.frontend # имя Dockerfile фронта
+    container_name: frontend
+
+    # Фронт ждёт, пока бэкенд будет доступен
+    depends_on:
+      - app
+
+    # Пробрасываем nginx порт наружу — frontend будет доступен по http://localhost:3000
+    ports:
+      - "3000:80"
+
+    # Можно включить автостарт
+    # restart: unless-stopped
+
+
+  ###########################################
+  # POSTGRES — БД для backend
+  ###########################################
   db:
-    image: "postgres:15-alpine"  # alpine легче
+    image: "postgres:15-alpine"
     container_name: postgres
+
+    # Основные переменные окружения для создания БД
     environment:
       POSTGRES_DB: holding_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+
+    # Пробрасываем порт для внешнего подключения (PgAdmin, Intellij и т.д.)
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data  # Именованный volume вместо ./pgdata
 
+    # Привязываем storage volume, чтобы данные сохранялись между перезапусками контейнера
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+  ###########################################
+  # REDIS — хранилище для сессий, кеша и т.п.
+  ###########################################
   redis:
     image: redis:alpine
     container_name: redis
+
+    # Запуск redis с паролем
     command: redis-server --requirepass session
+
+    # Пробрасываем порт для отладки
     ports:
       - "6379:6379"
 
+    # Можно включить auto-restart
+    # restart: unless-stopped
+
+
+#############################################
+# ХРАНИЛИЩЕ ДАННЫХ
+#############################################
 volumes:
-  postgres_data:  # Определение volume
+  postgres_data:
+  # Volume, который хранит БД между запусками
+  # Docker создаёт его автоматически

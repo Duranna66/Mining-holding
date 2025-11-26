@@ -15,8 +15,9 @@ import ru.holding.service.MaterialService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/materials")
+@RequestMapping("/api/v1/materials")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @Tag(name = "Materials", description = "Material management API")
 public class MaterialController {
 
